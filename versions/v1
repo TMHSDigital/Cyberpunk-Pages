@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Landing Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            overflow: hidden;
+        }
+        #container {
+            position: relative;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        #content {
+            text-align: center;
+            z-index: 1;
+        }
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0, 0 0 30px #0f0;
+        }
+        p {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .glitch-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #000;
+            background-color: #0f0;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .glitch-btn:hover {
+            background-color: #00ff00;
+            box-shadow: 0 0 10px #0f0, 0 0 20px #0f0, 0 0 30px #0f0;
+        }
+        .glitch-btn::before {
+            content: attr(data-text);
+            position: absolute;
+            left: -2px;
+            text-shadow: 2px 0 #ff00ff;
+            top: 0;
+            color: #0f0;
+            background: #000;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+        .glitch-btn::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 2px;
+            text-shadow: -2px 0 #00ffff;
+            top: 0;
+            color: #0f0;
+            background: #000;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+            animation: glitch-anim2 3s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(76px, 9999px, 31px, 0);
+            }
+            20% {
+                clip: rect(13px, 9999px, 53px, 0);
+            }
+            40% {
+                clip: rect(84px, 9999px, 26px, 0);
+            }
+            60% {
+                clip: rect(46px, 9999px, 33px, 0);
+            }
+            80% {
+                clip: rect(38px, 9999px, 86px, 0);
+            }
+            100% {
+                clip: rect(72px, 9999px, 22px, 0);
+            }
+        }
+        @keyframes glitch-anim2 {
+            0% {
+                clip: rect(18px, 9999px, 42px, 0);
+            }
+            20% {
+                clip: rect(63px, 9999px, 70px, 0);
+            }
+            40% {
+                clip: rect(57px, 9999px, 20px, 0);
+            }
+            60% {
+                clip: rect(89px, 9999px, 85px, 0);
+            }
+            80% {
+                clip: rect(94px, 9999px, 35px, 0);
+            }
+            100% {
+                clip: rect(29px, 9999px, 25px, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="background"></canvas>
+        <div id="content">
+            <h1>CYBERPUNK 2077</h1>
+            <p>Welcome to the future. It's not what you expected.</p>
+            <button class="glitch-btn" data-text="Enter">Enter</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js background animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('background') });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        camera.position.z = 5;
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        // Glitch effect on button hover
+        const glitchBtn = document.querySelector('.glitch-btn');
+        glitchBtn.addEventListener('mouseover', () => {
+            glitchBtn.style.animation = 'glitch-anim 0.3s infinite';
+        });
+        glitchBtn.addEventListener('mouseout', () => {
+            glitchBtn.style.animation = 'none';
+        });
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
